@@ -120,6 +120,9 @@ module Tire
           @index = Index.new(name)
         end
 
+        def index_name
+          @klass.index_name
+        end
       end
 
       module InstanceMethods
