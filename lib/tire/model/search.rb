@@ -148,7 +148,7 @@ module Tire
             if instance.destroyed?
               index.remove instance
             else
-              response = index.store( instance, store_options )
+              response = index.store( instance, store_options(instance) )
               instance.tire.matches = response['matches'] if instance.tire.respond_to?(:matches=)
               self
             end
@@ -157,8 +157,12 @@ module Tire
         alias :update_elasticsearch_index  :update_index
         alias :update_elastic_search_index :update_index
 
-        def store_options
-          {:percolate => percolator}
+        def store_options instance
+          if instance.respond_to? :tire_store_options
+            instance.tire_store_options( {:percolate => percolator} )
+          else
+            {:percolate => percolator}
+          end
         end
 
         # The default JSON serialization of the model, based on its `#to_hash` representation.
